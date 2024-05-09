@@ -10,7 +10,7 @@ class OthelloGUI:
         self.boardSize = boardSize
         self.window = Tk()
         self.window.title("Welcome to Othello Game")
-        self.hintBoard = [[' ' for _ in range(self.boardSize)] for _ in range(self.boardSize)]
+        self.hintBoard = []
         # define images used in the GUI
         self.greenImage = ImageTk.PhotoImage(Image.open("assets\\green.jpg").resize((90,90)))
         self.blackCoin = ImageTk.PhotoImage(Image.open("assets\\black_coin.png").resize((120,120)))
@@ -19,10 +19,10 @@ class OthelloGUI:
         self.create_board_buttons()
 
     def create_board_buttons(self):
-        score1 = "Your Score: " + str(self.gameManager.players[0].score)
-        score2 = "Computer Score: " + str(self.gameManager.players[1].score)
-        coins1 = "Coins Left: " + str(self.gameManager.players[0].coins)
-        coins2 = "Coins Left: " + str(self.gameManager.players[1].coins)
+        score1 = "Your Score: " + str(self.gameManager.board.players[0].score)
+        score2 = "Computer Score: " + str(self.gameManager.board.players[1].score)
+        coins1 = "Coins Left: " + str(self.gameManager.board.players[0].coins)
+        coins2 = "Coins Left: " + str(self.gameManager.board.players[1].coins)
         self.score1 = Label(self.window, text=score1, font=('Arial', 17), bg="black", fg="white", width=29)
         self.score1.grid(row=0, column=2, columnspan=4)
         self.score2 = Label(self.window, text=score2, font=('Arial', 17), bg="black", fg="white", width=29)
@@ -41,41 +41,44 @@ class OthelloGUI:
 
     def make_move(self, row, col):
         #only update if the pressed button is a hint Coin and a valid move
-        if self.buttons[row][col].cget("image") == str(self.hintCoin) and self.gameManager.board.update_board(row, col): 
+        if self.buttons[row][col].cget("image") == str(self.hintCoin) and self.gameManager.board.update_board(row, col, 'b'): 
             self.buttons[row][col].configure(image=self.blackCoin) # change to black coin
             self.play_move()
         elif self.buttons[row][col].cget("image") == str(self.hintCoin):
             self.update_dashboard(1)
-            self.hintBoard = self.gameManager.board.display_valid_moves()
-            self.update_GUI_board(self.gameManager.board.board, 8) 
+            self.hintBoard = self.gameManager.board.get_legal_moves('w')
+            self.update_GUI_board(self.gameManager.board.board) 
         
     def play_move(self):
             self.update_dashboard(0)
+            self.update_GUI_board(self.gameManager.board.board)
             self.update_dashboard(1)
-            self.hintBoard = self.gameManager.board.display_valid_moves()
-            self.update_GUI_board(self.gameManager.board.board, 8) 
+            self.hintBoard = self.gameManager.board.get_legal_moves('w')
+            self.update_GUI_board(self.gameManager.board.board) 
 
     def update_dashboard(self, i):
-        self.gameManager.board.update_score(self.gameManager.players)
+        self.gameManager.board.update_score(self.gameManager.board.players)
         if i == 0:
-            self.gameManager.players[i].make_move()
+            self.gameManager.board.players[i].make_move()
+            # self.gameManager.board.board[move[0][0]][move[0][1]] = 'w'
         else:
-            self.gameManager.players[i].make_move(self.gameManager.board.board)
-        score1 = "Your Score: " + str(self.gameManager.players[0].score)
-        score2 = "Computer Score: " + str(self.gameManager.players[1].score)
-        coins1 = "Coins Left: " + str(self.gameManager.players[0].coins)
-        coins2 = "Coins Left: " + str(self.gameManager.players[1].coins)
+            self.gameManager.board.players[i].make_move(self.gameManager.board)
+        score1 = "Your Score: " + str(self.gameManager.board.players[0].score)
+        score2 = "Computer Score: " + str(self.gameManager.board.players[1].score)
+        coins1 = "Coins Left: " + str(self.gameManager.board.players[0].coins)
+        coins2 = "Coins Left: " + str(self.gameManager.board.players[1].coins)
         self.score1.config(text=score1)
         self.coins1.config(text=coins1)
         self.score2.config(text=score2)
         self.coins2.config(text=coins2)
 
-    def update_GUI_board(self, board, sz):
-        for row in range(sz):
-            for col in range(sz):
-                if self.hintBoard[row][col] == 'h':
-                    self.buttons[row][col].configure(image=self.hintCoin)
-                elif board[row][col] == 'w':
+    def update_GUI_board(self, board):
+        for x,y in self.hintBoard:
+            self.buttons[x][y].configure(image=self.hintCoin)
+
+        for row in range(8):
+            for col in range(8):
+                if board[row][col] == 'w':
                     self.buttons[row][col].configure(image=self.whiteCoin)
                 elif board[row][col] == 'b':
                     self.buttons[row][col].configure(image=self.blackCoin)
@@ -84,8 +87,8 @@ class OthelloGUI:
         self.window.mainloop()
 
     def run(self):
-        self.hintBoard = self.gameManager.board.display_valid_moves()
-        self.update_GUI_board(self.gameManager.board.board, 8)
+        self.hintBoard = self.gameManager.board.get_legal_moves('w')
+        self.update_GUI_board(self.gameManager.board.board)
         self.__del__()
 
 # app starts here
