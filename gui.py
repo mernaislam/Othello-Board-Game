@@ -46,15 +46,18 @@ class OthelloGUI:
             self.play_move()
         elif self.buttons[row][col].cget("image") == str(self.hintCoin):
             self.update_dashboard(1)
-            self.hintBoard = self.gameManager.board.get_legal_moves('w')
+            self.hintBoard = self.gameManager.board.get_flip_moves('b')
             self.update_GUI_board(self.gameManager.board.board) 
         
     def play_move(self):
-            self.update_dashboard(0)
-            self.update_GUI_board(self.gameManager.board.board)
+            if self.hintBoard != []:
+                self.update_dashboard(0)
+                self.update_GUI_board(self.gameManager.board.board)
             self.update_dashboard(1)
-            self.hintBoard = self.gameManager.board.get_legal_moves('w')
-            self.update_GUI_board(self.gameManager.board.board) 
+            self.hintBoard = self.gameManager.board.get_flip_moves('b')
+            self.update_GUI_board(self.gameManager.board.board)
+            if self.hintBoard == []:
+                self.play_move()
 
     def update_dashboard(self, i):
         self.gameManager.board.update_score(self.gameManager.board.players)
@@ -73,21 +76,24 @@ class OthelloGUI:
         self.coins2.config(text=coins2)
 
     def update_GUI_board(self, board):
-        for x,y in self.hintBoard:
-            self.buttons[x][y].configure(image=self.hintCoin)
-
         for row in range(8):
             for col in range(8):
                 if board[row][col] == 'w':
                     self.buttons[row][col].configure(image=self.whiteCoin)
                 elif board[row][col] == 'b':
                     self.buttons[row][col].configure(image=self.blackCoin)
+                else:
+                    self.buttons[row][col].configure(image=self.greenImage)
+
+        for x,y in self.hintBoard:
+            self.buttons[x][y].configure(image=self.hintCoin)
+
 
     def __del__(self):
         self.window.mainloop()
 
     def run(self):
-        self.hintBoard = self.gameManager.board.get_legal_moves('w')
+        self.hintBoard = self.gameManager.board.get_flip_moves('b')
         self.update_GUI_board(self.gameManager.board.board)
         self.__del__()
 

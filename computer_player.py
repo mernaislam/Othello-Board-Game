@@ -12,8 +12,8 @@ class ComputerPlayer(Player):
         self.coins -= 1
         score, best_move = self.alpha_beta(board, self.depth, float("-inf"), float("inf"), True)
         print(best_move)
-        # if(best_move != ()):
-        board.update_board(best_move[0], best_move[1], 'w')
+        if best_move != ():
+            board.update_board(best_move[0], best_move[1], 'w')
         # return best_move
 
     def evaluate(self, board):
@@ -29,7 +29,7 @@ class ComputerPlayer(Player):
         best_move = ()
         if maximizing_player:
             max_eval = float('-inf')
-            for move in board.get_flip_moves('b'):
+            for move in board.get_flip_moves('w'):
                 tmp = copy.deepcopy(board.get_board())
                 board.update_board(move[0], move[1], 'w') #do
                 eval, _ = self.alpha_beta(board, depth - 1, alpha, beta, False) #recurse 
@@ -45,7 +45,8 @@ class ComputerPlayer(Player):
             return max_eval, best_move
         else:
             min_eval = float('inf')
-            for move in board.get_flip_moves('w'):
+            for move in board.get_flip_moves('b'):
+                tmp = copy.deepcopy(board.get_board())
                 board.update_board(move[0], move[1], 'b')
                 eval, _ = self.alpha_beta(board, depth - 1, alpha, beta, True)
                 if eval < min_eval:
@@ -53,7 +54,8 @@ class ComputerPlayer(Player):
                     best_move = move
                 beta = min(beta, eval)
                 board.update_score(board.players)
-                board.board[move[0]][move[1]] = ' '
+                # board.board[move[0]][move[1]] = ' '
+                board.set_board(tmp) #undo
                 if beta <= alpha:
                     break
             return min_eval, best_move

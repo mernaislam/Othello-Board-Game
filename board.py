@@ -29,34 +29,40 @@ class Board:
                 elif self.board[row][col] == 'b':
                     players[0].score += 1
 
-    def get_legal_moves(self, symbol):
-        lst = []
-        for row in range(self.n):
-            for col in range(self.n):
-                if self.board[row][col] == symbol:
-                    if row > 0 and self.board[row-1][col] == ' ':
-                        lst.append((row-1, col))
-                    if row < 7 and self.board[row+1][col] == ' ':
-                        lst.append((row+1, col))
-                    if col > 0 and self.board[row][col-1] == ' ':
-                        lst.append((row, col-1))
-                    if col < 7 and self.board[row][col+1] == ' ':
-                        lst.append((row, col+1))
-        return lst
+    # def get_legal_moves(self, symbol):
+    #     lst = []
+    #     for row in range(self.n):
+    #         for col in range(self.n):
+    #             if self.board[row][col] == symbol:
+    #                 if row > 0 and self.board[row-1][col] == ' ':
+    #                     lst.append((row-1, col))
+    #                 if row < 7 and self.board[row+1][col] == ' ':
+    #                     lst.append((row+1, col))
+    #                 if col > 0 and self.board[row][col-1] == ' ':
+    #                     lst.append((row, col-1))
+    #                 if col < 7 and self.board[row][col+1] == ' ':
+    #                     lst.append((row, col+1))
+    #     return lst
     
     def get_flip_moves(self,c):
         valid_moves = []
         for row in range(self.n):
             for col in range(self.n):
-                if self.valid_move(row, col, c):
+                if self.valid_move(row, col, c) != []:
                     valid_moves.append((row, col))
+
         return valid_moves
 
     def flip(self, lst, c):
         for x,y in lst:
+            # print("r w c")
+            # print(x, y)
             self.board[x][y] = c
 
     def valid_move(self, x, y, c):
+        if self.board[x][y] == 'w' or self.board[x][y] == 'b':
+            return []
+        
         opp = 'w' if c == 'b' else 'b'
         flag = False
         lst = []
