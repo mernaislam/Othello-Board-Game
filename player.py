@@ -3,5 +3,5 @@ class Player:
         self.coins = 30
         self.score = 2
 
-    def getMove():
-        pass
+    def make_move(self):
+        self.coins -= 1
