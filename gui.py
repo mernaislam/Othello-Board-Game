@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from PIL import ImageTk, Image
+from time import sleep
 class OthelloGUI:
     #constructor
     def __init__(self, gm, boardSize = 8):
