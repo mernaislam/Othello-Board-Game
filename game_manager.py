@@ -3,7 +3,6 @@ from computer_player import ComputerPlayer
 from gui import OthelloGUI
 import copy
 
-
 class GameManager:
     def __init__(self):
         self.board = Board()
@@ -43,6 +42,14 @@ class GameManager:
 
     def valid_move(self, x, y, c):
         return self.board.valid_move(x, y, c) != []
+    
+    def set_mode(self, m):
+        if m == "Easy":
+            self.computer_player.depth = 1
+        elif m == "Medium":
+            self.computer_player.depth = 3
+        else:
+            self.computer_player.depth = 5
 
     def game_over(self):
         if not self.can_move('b') and not self.can_move('w') \

@@ -103,6 +103,8 @@ class Board:
     def end_of_game(self, players):
         if players[0].coins == 0 or players[1].coins == 0:
             return True
+        if self.get_flip_moves('b') == [] and self.get_flip_moves('w') == []:
+            return True
         return False
     
     def get_board(self):

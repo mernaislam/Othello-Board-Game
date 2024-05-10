@@ -1,3 +1,4 @@
+from functools import partial
 import tkinter as tk
 from tkinter import *
 from PIL import ImageTk, Image
@@ -7,7 +8,6 @@ class OthelloGUI:
     def __init__(self, gm, boardSize = 8):
         self.boardSize = boardSize
         self.window = Tk()
-        self.window.title("Welcome to Othello Game")
         self.hintBoard = []
         self.gm = gm
         # define images used in the GUI
@@ -16,6 +16,22 @@ class OthelloGUI:
         self.whiteCoin = ImageTk.PhotoImage(Image.open("assets\\white_coin.png").resize((90,90)))
         self.hintCoin = ImageTk.PhotoImage(Image.open("assets\\hint_coin.png").resize((90,90)))
         self.create_board_buttons()
+        self.display_game_modes()
+
+    def display_game_modes(self):
+        self.window.title("Choose Game Mode")
+        lst = ["Easy", "Medium", "Hard"]
+        self.modes = [tk.Button(self.window, text=lst[i], height=18, font=('Arial', 30), bg="black", fg="white", width=12, command=partial(self.set_game_mode, lst[i])) for i in range(3)]
+        self.modes[0].grid(row=0, column=0, columnspan=5, rowspan=10)
+        self.modes[1].grid(row=0, column=3, columnspan=6, rowspan=10)
+        self.modes[2].grid(row=0, column=7, columnspan=6, rowspan=10)
+    
+    def set_game_mode(self, str):
+        self.gm.set_mode(str)
+        for mode_button in self.modes:
+            mode_button.destroy()
+        self.window.title("Welcome to Othello Game")  # Assuming you want to change the title back after choosing the mode
+        self.window.mainloop()
 
     def create_board_buttons(self):
         score1 = "Your Score: " + str(2)

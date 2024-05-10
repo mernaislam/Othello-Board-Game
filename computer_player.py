@@ -4,7 +4,7 @@ import copy
 class ComputerPlayer(Player):
     def __init__(self):
         super().__init__()
-        self.depth = 5 
+        # self.depth = 5
 
     def make_move(self, board):
         score, best_move = self.alpha_beta(board, self.depth, float("-inf"), float("inf"), True)
@@ -101,7 +101,7 @@ class ComputerPlayer(Player):
             if flip_moves == []:
                 max_eval, _ = self.alpha_beta(board, depth - 1, alpha, beta, False)
             
-            for move in board.get_flip_moves('w'):
+            for move in flip_moves:
                 tmp = copy.deepcopy(board.get_board())
                 board.update_board(move[0], move[1], 'w') #do
                 eval, _ = self.alpha_beta(board, depth - 1, alpha, beta, False) #recurse 
@@ -110,7 +110,6 @@ class ComputerPlayer(Player):
                     best_move = move
                 alpha = max(alpha, eval)
                 board.update_score(board.players)
-                # board.board[move[0]][move[1]] = ' ' #undo 
                 board.set_board(tmp) #undo
                 if beta <= alpha:
                     break
@@ -131,7 +130,6 @@ class ComputerPlayer(Player):
                     best_move = move
                 beta = min(beta, eval)
                 board.update_score(board.players)
-                # board.board[move[0]][move[1]] = ' '
                 board.set_board(tmp) #undo
                 if beta <= alpha:
                     break
