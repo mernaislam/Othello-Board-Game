@@ -28,21 +28,6 @@ class Board:
                     players[1].score += 1
                 elif self.board[row][col] == 'b':
                     players[0].score += 1
-
-    # def get_legal_moves(self, symbol):
-    #     lst = []
-    #     for row in range(self.n):
-    #         for col in range(self.n):
-    #             if self.board[row][col] == symbol:
-    #                 if row > 0 and self.board[row-1][col] == ' ':
-    #                     lst.append((row-1, col))
-    #                 if row < 7 and self.board[row+1][col] == ' ':
-    #                     lst.append((row+1, col))
-    #                 if col > 0 and self.board[row][col-1] == ' ':
-    #                     lst.append((row, col-1))
-    #                 if col < 7 and self.board[row][col+1] == ' ':
-    #                     lst.append((row, col+1))
-    #     return lst
     
     def get_flip_moves(self,c):
         valid_moves = []
@@ -50,13 +35,10 @@ class Board:
             for col in range(self.n):
                 if self.valid_move(row, col, c) != []:
                     valid_moves.append((row, col))
-
         return valid_moves
 
     def flip(self, lst, c):
         for x,y in lst:
-            # print("r w c")
-            # print(x, y)
             self.board[x][y] = c
 
     def valid_move(self, x, y, c):
@@ -74,7 +56,7 @@ class Board:
             while(startY < 7) and (self.board[startX][startY] == opp):
                 startY += 1
             
-            if (startY < 7) and (self.board[startX][startY] == c): #encloses
+            if (startY <= 7) and (self.board[startX][startY] == c): #encloses
                 flag = True
                 for i in range(y+1, startY):
                     lst.append((x, i))
@@ -85,8 +67,7 @@ class Board:
             startY = y
             while(startX > 0) and (self.board[startX][startY] == opp):
                 startX -= 1
-            
-            if (startX > 0) and (self.board[startX][startY] == c): #encloses
+            if (startX >= 0) and (self.board[startX][startY] == c): #encloses
                 flag = True
                 for i in range(x-1, startX, -1):
                     lst.append((i, y))
@@ -98,7 +79,7 @@ class Board:
             while(startX < 7) and (self.board[startX][startY] == opp):
                 startX += 1
             
-            if(startX < 7) and (self.board[startX][startY] == c): #encloses
+            if(startX <= 7) and (self.board[startX][startY] == c): #encloses
                 flag = True
                 for i in range(x+1, startX):
                     lst.append((i, y))
@@ -110,7 +91,7 @@ class Board:
             while(startY > 0) and (self.board[startX][startY] == opp):
                 startY -= 1
             
-            if(startY > 0) and (self.board[startX][startY] == c): #encloses
+            if(startY >= 0) and (self.board[startX][startY] == c): #encloses
                 flag = True
                 for i in range(y-1, startY, -1):
                     lst.append((x, i))
@@ -121,6 +102,8 @@ class Board:
 
     def end_of_game(self, players):
         if players[0].coins == 0 or players[1].coins == 0:
+            return True
+        if self.get_flip_moves('b') == [] and self.get_flip_moves('w') == []:
             return True
         return False
     
