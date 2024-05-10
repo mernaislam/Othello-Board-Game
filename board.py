@@ -56,7 +56,7 @@ class Board:
             while(startY < 7) and (self.board[startX][startY] == opp):
                 startY += 1
             
-            if (startY < 7) and (self.board[startX][startY] == c): #encloses
+            if (startY <= 7) and (self.board[startX][startY] == c): #encloses
                 flag = True
                 for i in range(y+1, startY):
                     lst.append((x, i))
@@ -67,8 +67,7 @@ class Board:
             startY = y
             while(startX > 0) and (self.board[startX][startY] == opp):
                 startX -= 1
-            
-            if (startX > 0) and (self.board[startX][startY] == c): #encloses
+            if (startX >= 0) and (self.board[startX][startY] == c): #encloses
                 flag = True
                 for i in range(x-1, startX, -1):
                     lst.append((i, y))
@@ -80,7 +79,7 @@ class Board:
             while(startX < 7) and (self.board[startX][startY] == opp):
                 startX += 1
             
-            if(startX < 7) and (self.board[startX][startY] == c): #encloses
+            if(startX <= 7) and (self.board[startX][startY] == c): #encloses
                 flag = True
                 for i in range(x+1, startX):
                     lst.append((i, y))
@@ -92,7 +91,7 @@ class Board:
             while(startY > 0) and (self.board[startX][startY] == opp):
                 startY -= 1
             
-            if(startY > 0) and (self.board[startX][startY] == c): #encloses
+            if(startY >= 0) and (self.board[startX][startY] == c): #encloses
                 flag = True
                 for i in range(y-1, startY, -1):
                     lst.append((x, i))
