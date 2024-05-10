@@ -8,6 +8,7 @@ class OthelloGUI:
     def __init__(self, gm, boardSize = 8):
         self.boardSize = boardSize
         self.window = Tk()
+        self.window.configure(bg="black")
         self.hintBoard = []
         self.gm = gm
         # define images used in the GUI
