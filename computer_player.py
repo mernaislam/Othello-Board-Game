@@ -11,6 +11,8 @@ class ComputerPlayer(Player):
         print(best_move)
         if best_move != None:
             board.update_board(best_move[0], best_move[1], 'w')
+        else:
+            best_move = board.get_flip_moves('w')[0]
         return best_move
     
     def open(self, row, col, board, c, direction):
@@ -35,12 +37,13 @@ class ComputerPlayer(Player):
     
     def strength(self, board, c):
         s = 0
-        if board.get_flip_moves('b') == [] and board.get_flip_moves('w') == []:
+        if board.end_of_game(board.players):
+            board.update_score(board.players)
             if board.players[0].score < board.players[1].score:
                 if c == 'w':
                     return 1000
                 else:
-                    return -1000
+                    return 0
         # count the main score
         for row in range(8):
             for col in range(8):
@@ -100,6 +103,9 @@ class ComputerPlayer(Player):
 
             if flip_moves == []:
                 max_eval, _ = self.alpha_beta(board, depth - 1, alpha, beta, False)
+                return max_eval, None
+            
+            best_move = flip_moves[0]
             
             for move in flip_moves:
                 tmp = copy.deepcopy(board.get_board())
@@ -120,6 +126,9 @@ class ComputerPlayer(Player):
 
             if flip_moves == []:
                 min_eval, _ = self.alpha_beta(board, depth - 1, alpha, beta, True)
+                return min_eval, None
+            
+            best_move = flip_moves[0]
 
             for move in flip_moves:
                 tmp = copy.deepcopy(board.get_board())
